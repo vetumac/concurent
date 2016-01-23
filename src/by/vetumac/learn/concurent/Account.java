@@ -1,5 +1,6 @@
 package by.vetumac.learn.concurent;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -11,6 +12,8 @@ public class Account {
     private int balance;
     private Lock lock;
 
+    private AtomicInteger failCounter;
+
     public Lock getLock() {
         return lock;
     }
@@ -18,6 +21,7 @@ public class Account {
     public Account(int initBalance) {
         this.balance = initBalance;
         this.lock = new ReentrantLock();
+        this.failCounter = new AtomicInteger();
     }
 
     public void withdraw(int amount) {
@@ -28,7 +32,15 @@ public class Account {
         balance += amount;
     }
 
+    public void incFailedTransferCount() {
+        failCounter.incrementAndGet();
+    }
+
     public int getBalance() {
         return balance;
+    }
+
+    public AtomicInteger getFailCounter() {
+        return failCounter;
     }
 }
